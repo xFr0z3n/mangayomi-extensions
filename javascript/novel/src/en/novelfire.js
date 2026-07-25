@@ -6,7 +6,7 @@ const mangayomiSources = [{
     "iconUrl": "https://m.media-amazon.com/images/I/31957gKv8WL.jpg",
     "typeSource": "single",
     "itemType": 2,
-    "version": "0.0.1",
+    "version": "0.0.2",
     "pkgPath": "novel/src/en/novelfire.js",
     "notes": ""
 }];
@@ -138,14 +138,19 @@ class DefaultExtension extends MProvider {
           'chapters': chaptersList.reverse()
         }
     }
+    
     // For novel html content
     async getHtmlContent(name, url) {
         const client = new Client();
         const res = await client.get(url, this.getHeaders(url));
         const doc = new Document(res.body);
-        
+
         const chapterContent = doc.selectFirst("div#content");
-        return chapterContent.outerHtml;
+        const html = chapterContent ? chapterContent.outerHtml : "";
+        if (!html || html.trim().length === 0) {
+            throw new Error("NovelFire: no chapter content found at " + url);
+        }
+        return html;
     }
     // Clean html up for reader
     async cleanHtmlContent(html) {

@@ -139,19 +139,33 @@ class DefaultExtension extends MProvider {
         }
     }
     
-    // For novel html content
+// For novel html content
     async getHtmlContent(name, url) {
         const client = new Client();
-        const res = await client.get(url, this.getHeaders(url));
-        const doc = new Document(res.body);
+        const maxAttempts = 5;
+        let lastError = null;
 
-        const chapterContent = doc.selectFirst("div#content");
-        const html = chapterContent ? chapterContent.outerHtml : "";
-        if (!html || html.trim().length === 0) {
-            throw new Error("NovelFire: no chapter content found at " + url);
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                const res = await client.get(url, this.getHeaders(url));
+                const doc = new Document(res.body);
+                const chapterContent = doc.selectFirst("div#content");
+                const html = chapterContent ? chapterContent.outerHtml : "";
+                if (html && html.trim().length > 0) {
+                    return html;
+                }
+                lastError = new Error("NovelFire: no chapter content found at " + url);
+            } catch (e) {
+                lastError = e;
+            }
+            if (attempt < maxAttempts) {
+                // 1s, 2s, 4s, 8s between attempts
+                await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt - 1)));
+            }
         }
-        return html;
+        throw lastError;
     }
+    
     // Clean html up for reader
     async cleanHtmlContent(html) {
         const doc = new Document(html);

@@ -6,6 +6,12 @@ import 'dart/manga/manga_source_list.dart';
 import 'dart/novel/novel_source_list.dart';
 import 'model/source.dart';
 
+/// Repository that hosts the extension files. Defaults to upstream so the
+/// generator keeps working unchanged; forks can point it at themselves with
+/// the EXTENSIONS_REPO environment variable.
+final extensionsRepo =
+    Platform.environment['EXTENSIONS_REPO'] ?? 'm2k3a/mangayomi-extensions';
+
 void main() {
   final jsSources = _searchJsSources(Directory("javascript"));
   genManga(
@@ -88,7 +94,7 @@ List<Source> _searchJsSources(Directory dir) {
                 ..appMinVerReq =
                     sourceJson["appMinVerReq"] ?? defaultSource.appMinVerReq
                 ..sourceCodeUrl =
-                    "https://raw.githubusercontent.com/m2k3a/mangayomi-extensions/$branchName/javascript/${sourceJson["pkgPath"] ?? sourceJson["pkgName"]}";
+                    "https://raw.githubusercontent.com/$extensionsRepo/$branchName/javascript/${sourceJson["pkgPath"] ?? sourceJson["pkgName"]}";
               if (sourceJson["id"] != null) {
                 source = source..id = int.tryParse("${sourceJson["id"]}");
               }

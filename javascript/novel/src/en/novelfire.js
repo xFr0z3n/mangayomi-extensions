@@ -149,7 +149,7 @@ class DefaultExtension extends MProvider {
             try {
                 const res = await client.get(url, this.getHeaders(url));
                 const doc = new Document(res.body);
-                const chapterContent = doc.selectFirst("div#content");
+                const chapterContent = doc.selectFirst("div#content") || doc.selectFirst("div.chapter-content");
                 const html = chapterContent ? chapterContent.outerHtml : "";
                 if (html && html.trim().length > 0) {
                     return html;

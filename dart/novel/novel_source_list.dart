@@ -1,4 +1,4 @@
 import '../../model/source.dart';
-import 'src/en/royalroad/source.dart';
 
-List<Source> dartNovelSourceList = [royalroadSource];
+// Only JavaScript sources are published from this repo (Comix, NovelFire).
+List<Source> dartNovelSourceList = [];

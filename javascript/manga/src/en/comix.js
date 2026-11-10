@@ -9,7 +9,7 @@ const mangayomiSources = [
     "typeSource": "single",
     "itemType": 0,
     "isNsfw": false,
-    "version": "0.2.2",
+    "version": "0.2.3",
     "pkgPath": "manga/src/en/comix.js"
   }
 ];
@@ -387,6 +387,21 @@ function comixAbsUrl(base, p) {
     return base + "/" + p;
 }
 
+// Page image URL: item paths are relative to the chapter's CDN base
+// (result.pages.baseUrl).  Absolute item URLs are kept; with no CDN base the
+// path falls back to the site origin.
+function comixPageUrl(cdnBase, siteBase, path) {
+    if (/^https?:\/\//i.test(path)) return path;
+    if (path.indexOf("//") === 0) return "https:" + path;
+    if (!cdnBase) return comixAbsUrl(siteBase, path);
+    if (cdnBase.indexOf("//") === 0) cdnBase = "https:" + cdnBase;
+    const baseSlash = cdnBase.charAt(cdnBase.length - 1) === "/";
+    const pathSlash = path.charAt(0) === "/";
+    if (baseSlash && pathSlash) return cdnBase + path.slice(1);
+    if (!baseSlash && !pathSlash) return cdnBase + "/" + path;
+    return cdnBase + path;
+}
+
 function comixStripHtml(html) {
     if (!html) return "";
     return String(html)
@@ -471,12 +486,28 @@ class DefaultExtension extends MProvider {
         return b;
     }
 
+    // Source-wide headers.  Mangayomi calls this once with the base URL and
+    // applies the result to EVERY image it loads for this source (covers and
+    // chapter pages, reader and downloads), on top of any per-page headers.
+    // comix.to's own reader loads page images with referrerPolicy
+    // "no-referrer", so this set must not carry Referer/Origin or a JSON
+    // Accept.  API calls use apiHeaders() instead.
     getHeaders(url) {
-        const headers = {
-            "Accept": "application/json, text/plain, */*",
-            "Referer": this.getBaseUrl() + "/",
-            "Origin": this.getBaseUrl()
-        };
+        const headers = this.identityHeaders();
+        headers["Accept"] = "image/avif,image/webp,image/png,image/jpeg,image/*;q=0.8,*/*;q=0.5";
+        return headers;
+    }
+
+    apiHeaders() {
+        const headers = this.identityHeaders();
+        headers["Accept"] = "application/json, text/plain, */*";
+        headers["Referer"] = this.getBaseUrl() + "/";
+        headers["Origin"] = this.getBaseUrl();
+        return headers;
+    }
+
+    identityHeaders() {
+        const headers = {};
         // Do not hardcode a User-Agent here.  comix.to's human check issues a
         // cookie bound to the browser that solved it, and Mangayomi applies the
         // WebView's own UA together with the stored cookie only when the source
@@ -614,7 +645,7 @@ class DefaultExtension extends MProvider {
 
     async apiGet(path, params) {
         let session = await this.ensureSession();
-        let res = await this.client.get(this.buildApiUrl(path, params, session), this.getHeaders());
+        let res = await this.client.get(this.buildApiUrl(path, params, session), this.apiHeaders());
         let json = this.parseApiResponse(res, session);
 
         // A bundle rotation makes every request fail with invalid_token.  Drop
@@ -622,7 +653,7 @@ class DefaultExtension extends MProvider {
         if (json && (json.code === "invalid_token" || json.error === "invalid_token")) {
             COMIX_SESSION = null;
             session = await this.ensureSession();
-            res = await this.client.get(this.buildApiUrl(path, params, session), this.getHeaders());
+            res = await this.client.get(this.buildApiUrl(path, params, session), this.apiHeaders());
             json = this.parseApiResponse(res, session);
         }
 
@@ -961,11 +992,27 @@ class DefaultExtension extends MProvider {
             }
             throw e;
         }
-        const items = (j.result && j.result.pages && j.result.pages.items) || [];
-        const base = this.getBaseUrl();
+        return this.pagesFromResult(j.result || {});
+    }
+
+    // result.pages is { baseUrl, items: [{ url, width, height }], alt, alt2,
+    // node | alt_node } (or a bare items array).  Each item.url is a path
+    // relative to pages.baseUrl, the image CDN: the site's reader builds
+    // pages.baseUrl + item.url.  Resolving it against comix.to (as before)
+    // produced URLs that do not exist.
+    pagesFromResult(result) {
+        const raw = result.pages;
+        const p = Array.isArray(raw) ? { items: raw } : (raw || {});
+        const items = p.items || [];
+        const cdnBase = typeof p.baseUrl === "string" ? p.baseUrl.trim() : "";
+        const siteBase = this.getBaseUrl();
+        const headers = this.getHeaders();
         const pages = [];
         for (let i = 0; i < items.length; i++) {
-            if (items[i] && items[i].url) pages.push(comixAbsUrl(base, items[i].url));
+            const it = items[i];
+            const path = it && (typeof it === "string" ? it : it.url);
+            if (!path) continue;
+            pages.push({ url: comixPageUrl(cdnBase, siteBase, String(path).trim()), headers: headers });
         }
         return pages;
     }

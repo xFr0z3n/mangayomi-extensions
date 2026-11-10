@@ -8,8 +8,8 @@ const mangayomiSources = [
     "iconUrl": "https://www.google.com/s2/favicons?sz=128&domain=https://comix.to",
     "typeSource": "single",
     "itemType": 0,
-    "isNsfw": true,
-    "version": "0.2.1",
+    "isNsfw": false,
+    "version": "0.2.2",
     "pkgPath": "manga/src/en/comix.js"
   }
 ];
@@ -18,7 +18,6 @@ const mangayomiSources = [
 // Constants and fallback data
 // ---------------------------------------------------------------------------
 
-const COMIX_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
 const COMIX_B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 // Key assembled from the apicore bundle at build 35595e3de3c99889c1aa70
@@ -509,7 +508,6 @@ class DefaultExtension extends MProvider {
         const base = this.getBaseUrl();
         try {
             const homeRes = await this.client.get(base + "/", {
-                "User-Agent": COMIX_UA,
                 "Accept": "text/html,application/xhtml+xml"
             });
             const home = homeRes.body || "";
@@ -531,7 +529,6 @@ class DefaultExtension extends MProvider {
 
             const mainUrl = comixResolveUrl(base + "/", mainPath);
             const mainRes = await this.client.get(mainUrl, {
-                "User-Agent": COMIX_UA,
                 "Accept": "*/*"
             });
             const mainSrc = mainRes.body || "";
@@ -541,7 +538,6 @@ class DefaultExtension extends MProvider {
             const apiUrl = comixResolveUrl(mainUrl, am[0]);
 
             const apiRes = await this.client.get(apiUrl, {
-                "User-Agent": COMIX_UA,
                 "Accept": "*/*"
             });
             const apiSrc = apiRes.body || "";
@@ -951,7 +947,20 @@ class DefaultExtension extends MProvider {
         if (!id && /^\d+$/.test(s)) id = s;
         if (!id) throw new Error("Comix: cannot find chapter id in " + url);
 
-        const j = await this.apiGet("/chapters/" + id, {});
+        let j;
+        try {
+            j = await this.apiGet("/chapters/" + id, {});
+        } catch (e) {
+            if (this.isCaptchaError(e)) {
+                throw new Error("Comix wants a human check before it shows this chapter's " +
+                    "pages. In the reader, tap the globe (webview) button to open this " +
+                    "chapter on comix.to, complete the check if it appears, then tap the " +
+                    "next or previous chapter there so the app saves the pass. Close the " +
+                    "webview and reopen the chapter. If the pages still do not load, comix.to " +
+                    "only serves them to its own reader: read this chapter in the webview.");
+            }
+            throw e;
+        }
         const items = (j.result && j.result.pages && j.result.pages.items) || [];
         const base = this.getBaseUrl();
         const pages = [];

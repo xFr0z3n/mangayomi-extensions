@@ -9,7 +9,7 @@ const mangayomiSources = [
     "typeSource": "single",
     "itemType": 0,
     "isNsfw": true,
-    "version": "0.2.0",
+    "version": "0.2.1",
     "pkgPath": "manga/src/en/comix.js"
   }
 ];
@@ -474,11 +474,22 @@ class DefaultExtension extends MProvider {
 
     getHeaders(url) {
         const headers = {
-            "User-Agent": COMIX_UA,
             "Accept": "application/json, text/plain, */*",
             "Referer": this.getBaseUrl() + "/",
             "Origin": this.getBaseUrl()
         };
+        // Do not hardcode a User-Agent here.  comix.to's human check issues a
+        // cookie bound to the browser that solved it, and Mangayomi applies the
+        // WebView's own UA together with the stored cookie only when the source
+        // leaves the header out.  A fixed desktop UA made that pair mismatch.
+        // A preference remains for users who paste a cookie from an external
+        // browser and need to match that browser's UA too.
+        try {
+            const ua = new SharedPreferences().get("user_agent");
+            if (ua && String(ua).trim()) {
+                headers["User-Agent"] = String(ua).replace(/[\r\n]+/g, " ").trim();
+            }
+        } catch (e) { }
         // Optional escape hatch for the site's Turnstile check.  The app's
         // normal cookie store is used automatically; this preference only
         // overrides it when the user pastes a Cookie header from a browser
@@ -590,8 +601,8 @@ class DefaultExtension extends MProvider {
     apiError(json) {
         if (!json || typeof json !== "object") return "";
         if (json.error === "captcha_required" || json.challenge) {
-            return "Comix is asking for a human check before it returns chapters or pages. " +
-                "Open https://comix.to in a browser, complete the check, then retry.";
+            return "Comix wants a one-time human check. Tap the globe (webview) " +
+                "button on the title, complete the check, then pull to refresh.";
         }
         if (json.code === "invalid_token" || json.error === "invalid_token") {
             return "Comix rejected the request token. Reopen the source to refresh it.";
@@ -791,9 +802,33 @@ class DefaultExtension extends MProvider {
         return this.listFromResult(j.result, base);
     }
 
+    // comix.to protects its chapter/page API with a one-time Turnstile check
+    // at /@waf/challenge.  When that check is pending the detail link is set to
+    // the challenge page so the app's globe button can open it; unwrap the
+    // `return` target before reading the manga id.
+    normalizeTargetUrl(url) {
+        let s = String(url || "").trim();
+        const m = /[?&]return=([^&]+)/.exec(s);
+        if (m) {
+            try { s = decodeURIComponent(m[1]); } catch (e) { }
+        }
+        return s;
+    }
+
+    challengeLink(titlePath) {
+        let p = String(titlePath || "").trim();
+        if (!p) p = "/";
+        if (p.charAt(0) !== "/") p = "/" + p;
+        return "/@waf/challenge?return=" + encodeURIComponent(p);
+    }
+
+    isCaptchaError(e) {
+        return !!e && /captcha_required|human check|challenge/i.test(String(e.message || e));
+    }
+
     extractHid(url) {
         if (!url) return "";
-        const s = String(url).trim();
+        const s = this.normalizeTargetUrl(url);
         const m = /\/(?:title|manga)\/([^\/?#]+)/.exec(s);
         if (m) {
             const seg = m[1];
@@ -819,12 +854,24 @@ class DefaultExtension extends MProvider {
 
     async getDetail(url) {
         const base = this.getBaseUrl();
-        const hid = this.extractHid(url);
+        const target = this.normalizeTargetUrl(url);
+        const hid = this.extractHid(target);
         if (!hid) throw new Error("Comix: missing manga id");
 
         const j = await this.apiGet("/manga/" + encodeURIComponent(hid), {});
         const d = j.result || {};
-        const chapters = await this.getChapters(hid, d.title || hid);
+
+        // A pending human check must not make the whole title fail to load.
+        // Return the metadata and point the app's globe button at the challenge
+        // page so the user has an obvious way to pass it.
+        let chapters = [];
+        let needsHumanCheck = false;
+        try {
+            chapters = await this.getChapters(hid, d.title || hid);
+        } catch (e) {
+            if (!this.isCaptchaError(e)) throw e;
+            needsHumanCheck = true;
+        }
 
         const poster = d.poster || {};
         const img = poster.large || poster.medium || "";
@@ -832,11 +879,19 @@ class DefaultExtension extends MProvider {
         const gs = d.genres || [];
         for (let i = 0; i < gs.length; i++) genres.push(gs[i].title);
 
+        const titlePath = d.url || ("/title/" + hid);
+        let description = d.synopsis || comixStripHtml(d.synopsisHtml || "");
+        if (needsHumanCheck) {
+            description = "Comix needs a one-time human check before it will list chapters. " +
+                "Tap the globe (webview) button above, complete the check, then pull to refresh." +
+                (description ? "\n\n" + description : "");
+        }
+
         return {
             name: d.title || "",
-            link: d.url || url,
+            link: needsHumanCheck ? this.challengeLink(titlePath) : titlePath,
             imageUrl: img ? comixAbsUrl(base, img) : "",
-            description: d.synopsis || comixStripHtml(d.synopsisHtml || ""),
+            description: description,
             author: (d.authors || []).map(function (a) { return a.title; }).join(", "),
             artist: (d.artists || []).map(function (a) { return a.title; }).join(", "),
             status: comixStatus(d.status),
@@ -858,6 +913,12 @@ class DefaultExtension extends MProvider {
                     "order[number]": "desc"
                 });
             } catch (e) {
+                if (this.isCaptchaError(e)) {
+                    throw new Error("Comix: could not load the chapter list for \"" +
+                        (title || hid) + "\". Comix wants a one-time human check. " +
+                        "Tap the globe (webview) button on the title, complete the check, " +
+                        "then pull to refresh.");
+                }
                 throw new Error("Comix: could not load the chapter list for \"" +
                     (title || hid) + "\". " + e.message);
             }
@@ -1046,12 +1107,25 @@ class DefaultExtension extends MProvider {
             key: "cookie",
             editTextPreference: {
                 title: "Optional Cookie header",
-                summary: "Only needed if comix.to shows a human check",
+                summary: "Only needed if the in-app webview cannot pass the human check",
                 value: "",
                 dialogTitle: "Cookie header",
-                dialogMessage: "If comix.to asks for a human check, open it in a browser, " +
-                    "complete the check, then paste the browser's Cookie header here. " +
-                    "Leave empty normally."
+                dialogMessage: "Normally leave this empty: tap the globe (webview) button " +
+                    "on a title, complete the check there, and the app stores the cookie. " +
+                    "If you instead passed the check in an external browser, paste that " +
+                    "browser's Cookie header here and its User-Agent below."
+            }
+        }, {
+            key: "user_agent",
+            editTextPreference: {
+                title: "Optional User-Agent",
+                summary: "Only needed with a pasted Cookie header",
+                value: "",
+                dialogTitle: "User-Agent",
+                dialogMessage: "Leave empty to let the app use its webview User-Agent " +
+                    "together with the stored cookie. Set this only when you paste a " +
+                    "cookie from an external browser, and use that same browser's " +
+                    "User-Agent so the two match."
             }
         }];
     }

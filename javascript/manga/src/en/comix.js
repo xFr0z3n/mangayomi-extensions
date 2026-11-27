@@ -9,7 +9,7 @@ const mangayomiSources = [
     "typeSource": "single",
     "itemType": 0,
     "isNsfw": false,
-    "version": "0.2.3",
+    "version": "0.2.4",
     "pkgPath": "manga/src/en/comix.js"
   }
 ];
@@ -20,43 +20,43 @@ const mangayomiSources = [
 
 const COMIX_B64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
-// Key assembled from the apicore bundle at build 35595e3de3c99889c1aa70
-// (x-build-id to7q0v).  Used only when live extraction fails.
+// Key assembled from apicore-tp5661-B_NTYwfs.js (build 35595e3de3c99889c1aa70,
+// token prefix si7).  Used only when live extraction fails.
 const COMIX_FALLBACK_KEY_HEX =
-    "1c948595505e707ded4b4d46701af692a2aa7a40d911929daaec1111d6e0eea7" +
-    "442fd064c6c87c601f28f5c9cde6c2d2be463aae8596f026b02dc2b28b1797c6" +
-    "36d642fc0402ef6723fe9af164b86d5f804a7ffacff360f61af80bb8cb4d8618" +
-    "38b53fc402f14f80361458bd3995b558152fd7b71531553d8fd79c00e6fa5a40" +
-    "986a11dfa504e00024b1bf712d3df30fd6535c0c5c0c40e5e2287f2c7a70ccd1" +
-    "c1976e84fc3bc6e7422f96b399a387ba1d48d5552d862d6eeeb62637dbefad28" +
-    "98a893f049171612b5531801b424c8a7b656c01ba8e591c76ba8bacfbf9f9b33" +
-    "39525c88a910db4584c18302347312ca87a1607ac4d0072329570908624052d6" +
-    "1194aa29c2849ec248265569aec2f812fe45be1e3fac28f8f1f8e21b17d7f909" +
-    "49a2ec3feb5b0560ba9ec801462519ad60e50678764cd700d09ac52dcc3a77b3" +
-    "ce41f48a0f810272787c499bf3beae3ea7e6b5c9f82a9d3d69ca7fbbd82b17d5" +
-    "968c989bd8f26fd50b40ac9a08273de521f03efa48c2edfc828e118ac752fb2b" +
-    "a562df1fb6dd17836f6551df7567d5706444e0e822d66049106394359c77bfb1" +
-    "1fee6affdcdf0026f3b733afd6df6a970789c3dc21d2b4dda888a3b02af8965b" +
-    "07115c56ddadfa69719f77675d92c1b78e21f65f7ca3d56cbf615ef93fce7c80" +
-    "faf3ec5c1f3d859eccc2b76d74bb0f3f36afd1830e44ddd14dd2aff8340f1f9b" +
-    "987c3870788f95bfeea7e23817c3d709eab486feae68b0cbba438d27329ae161" +
-    "cb23f328341fe358da8935c3200f104df1a2c1a6b4545f4e7897382acb9d4d59" +
-    "dbf1b361746299b68029d6c00a4ca2e72821ad021a15781b148ed16ce4d76b08" +
-    "50cba7f146e54a88389f7634dd8ec3181a2d9f900283ca3d66422148b4d3769e" +
-    "df4b08f7699166939a21a0de893c2d8579bb26200f33b6fe894b22844d4202e1" +
-    "ebad2a80a6d398045777e4b85e26d9ec48fb841fb5d33a6ac2c83b383f10cb6c" +
-    "0b9b5094a1ec35872e4e8a67b36495f7fd0688b76de0425d829626e229eac6b1" +
-    "f0ef7f8447d03c5137b13f40537e0b42c12a864da2f3c813dc2da159c0531fe9" +
-    "d4d7d95138d3217b681dca78252fdab6325a8990912ca29cd82473c1acbd7961" +
-    "c065ff42fde8c46f073016100999ef9524fa100b0456efcd6942efe127ed2130" +
-    "96bc6e7db8a9e95a2021ab97810104c2ce12f3435663815d89a1eb77f1e3dcaf" +
-    "505ec94970ce2f00c1de53eb45c66dcb0c12a8a069fafb54ed28073b4bbc2363" +
-    "bb63b04ecfea3ae3c788e57fca2dd3166520114b614df11e23c2fa584c5cdf42" +
-    "2294302d552cfa88e73ce81107155cecec21bedc83c113fe86d0227f3a77433d" +
-    "2025fff79a5270685d9a1d9d55d354e131db2b2c5c2e28d620ef3234020e99c0" +
-    "929ff63723c8d2c6fcec25397dc4ea04016f8c45a8395bdaa3bc977fa93faa02" +
-    "505dbe4ca8e88187c031581f3d74b2d1b8835413c3f690d303e2f39f0ca686a1" +
-    "de3d2f2d957819cb69e8b0cf048867109e62b312b87e9b1a51b5a39c70c9c523";
+    "8e9bf39b5831e3f9e924d459d4f65699096cbc056ddc96abd83f99e59b5aa92a" +
+    "137e52ee53c4c438c0bd2fe2a506279da9414abf82f99a9fd391c90c90879526" +
+    "792f9d7c9905e01e01a814f8280fe5d1d1b97f431d37777850d1050b494053e8" +
+    "af575a8bcd69095fe6ca903e328c3cf247e9f2c89048b4adee8df4206c907a2f" +
+    "3447631adb863c0afb4e4ed66c5fb778d43ac0ce9c731653b8877feb068543b8" +
+    "885fadc142ffc335008a11ba562f4b222ee32c640560c89c7df273eb60d3064a" +
+    "2b9d14cbe84da8aa9f0eaf6bdd1e82e06611383515a7468858bf73ac3e94e9ac" +
+    "4e1a5363ef145c8a6a6bb00d905eaffa2bf26da0de28ab51a175567da82b4699" +
+    "654185cf4cad688b79ee56dbea04050f9d66ba1361f83a50fb190885e3868728" +
+    "1cc5bbee444c74ea0766ab9457120f12cf31ee7f593dfc0e29ea9f591947d878" +
+    "f8f1c37fdf0616982cb1e26e5b5c5ea8fdc2ae12bf96ac1b76e40738d9586e1c" +
+    "281e757f97a385ed2c84b27b7db9cd5175cb268603b26b59b563cddccdd6bb55" +
+    "c064c758841e49564644890696a4ff86b6aa40e9e8867b24c7a957ca0fba2855" +
+    "c04e17657285a028c4f11ef5fedd331716bc422b71c61484da7d054d80597cec" +
+    "7b90526fb977986b0ae514e11e520e440d38135d24f2a6308f4fc68a02c9f190" +
+    "e16802c56e329c9ba8425d3c9d70dca2ad10ad1698f83ed11749c60dbda0cc2a" +
+    "663515c70c572eb2d1553300172abcb93cea040466054630d971f2aea5a49a7d" +
+    "925300c9bf2cfd6c8a678193ae9607acc216486bd40beca4ad1c511e0b1d1e8a" +
+    "fb5eea7ee1d94c640cf1a0a6d0dfb16371f6fb5f865a19d813087baa736e9416" +
+    "d706289dec51fa826ec1074ae2d884cb7febad09423d94a240c4f75bbf47aa81" +
+    "678b5a084ae2adefd8aa104253dadcadb7445116cd7a51c48405f2b551efd93c" +
+    "06ed2097a0874047d0eefa3d7a1786786ff11e71862b25e5320f60a658fd386b" +
+    "0dc30a84096e92e7b4d660ed01bb7cd7166305a248d135263bf2b276120f4abc" +
+    "512c7bad1712cba6e298dceb860427f64aeaff4ee2edfb73418d915dcf036885" +
+    "b29ebb346f7f41a9c90a5dc1ff449232485980c16f698c4fe559aeedff7a20da" +
+    "a4d0345f7f9c2d9c5c5a8f2cde11145e2b5e5de6ca0d23b7a864437007f302a2" +
+    "20f402d7ae865017f4dc51e8ca5db06f10ef888214d35821188f735c26d07d91" +
+    "f2ddcb571f27d52cb7bd345d1328e60737ff59fbd85d5536d261390a9bd53dad" +
+    "91d144cdf6b496c101537b31900a2a230605204514763e0284ac991594ed2f38" +
+    "3b8ec9befbc5459e61c91b77e4c38d14107749f19a12270efe9ad2bce178160b" +
+    "1293736eb6101aaa58e86b9c7dcdd5e6c066e1a9af438882018a4d43da81a31b" +
+    "5d48dbd896d77f00dc77ee86ae7219af620d3e082a4394954e91443b870366b5" +
+    "b8e61150dff759b143b66e1613d314bf5b5d1752fae503e5d00214bed1058871" +
+    "b9d89d32e18bb0f718a6d40b04daabc759435dd5cada6217177322f458c0efe9";
 
 let COMIX_SESSION = null;
 
@@ -148,14 +148,93 @@ function comixHexToBytes(hex) {
 // apicore bundle: string decoder, key assembly, token, response decrypt
 // ---------------------------------------------------------------------------
 
+// Every site build re-runs the obfuscator, which renames all identifiers,
+// reshuffles the string table and changes the index offset and rotation
+// checksum.  Nothing below hardcodes those: they are read from the bundle.
+
+function comixEscRe(s) {
+    return s.replace(/[$]/g, "\\$");
+}
+
+// Evaluates the rotation checksum expression: numbers, + - * /, parentheses
+// and parseInt(<decoder>(<n>)) terms.  term(n) returns the parseInt value.
+function comixEvalExpr(expr, term) {
+    const toks = [];
+    const re = /\s*(parseInt\([\w$]+\((\d+)\)\)|\d+(?:\.\d+)?|[-+*\/()])/y;
+    let pos = 0;
+    while (pos < expr.length) {
+        re.lastIndex = pos;
+        const m = re.exec(expr);
+        if (!m) throw new Error("checksum token at " + pos);
+        if (m[2] !== undefined) toks.push({ t: "n", v: term(parseInt(m[2], 10)) });
+        else if (/^\d/.test(m[1])) toks.push({ t: "n", v: parseFloat(m[1]) });
+        else toks.push({ t: m[1] });
+        pos = re.lastIndex;
+    }
+    let i = 0;
+    function prim() {
+        const k = toks[i++];
+        if (!k) throw new Error("checksum eof");
+        if (k.t === "n") return k.v;
+        if (k.t === "-") return -prim();
+        if (k.t === "+") return +prim();
+        if (k.t === "(") {
+            const v = add();
+            i++;
+            return v;
+        }
+        throw new Error("checksum token " + k.t);
+    }
+    function mul() {
+        let v = prim();
+        while (i < toks.length && (toks[i].t === "*" || toks[i].t === "/")) {
+            const op = toks[i++].t;
+            const r = prim();
+            v = op === "*" ? v * r : v / r;
+        }
+        return v;
+    }
+    function add() {
+        let v = mul();
+        while (i < toks.length && (toks[i].t === "+" || toks[i].t === "-")) {
+            const op = toks[i++].t;
+            const r = mul();
+            v = op === "+" ? v + r : v - r;
+        }
+        return v;
+    }
+    return add();
+}
+
 function comixMakeDecoder(src) {
-    const ALPHA = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=";
-    const jm = /const JO=\[(.*?)\];return\(e=function/.exec(src);
-    if (!jm) throw new Error("decoder table not found");
-    let JO = JSON.parse("[" + jm[1] + "]");
+    // function V(c,K){c-=446;const C=A();...
+    const dm = /function ([\w$]+)\(([\w$]+),[\w$]+\)\{\2-=(\d+);const [\w$]+=([\w$]+)\(\)/.exec(src);
+    if (!dm) throw new Error("decoder function not found");
+    const decName = dm[1];
+    const base = parseInt(dm[3], 10);
+    const arrFn = dm[4];
+
+    const am = new RegExp("function " + comixEscRe(arrFn) + "\\(\\)\\{const [\\w$]+=\\[(.*?)\\];").exec(src);
+    if (!am) throw new Error("decoder table not found");
+    let JO = JSON.parse("[" + am[1] + "]");
+
+    const alm = /"([A-Za-z0-9+\/=]{65})"\.indexOf/.exec(src);
+    const ALPHA = alm ? alm[1] : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=";
+
+    // !function(){const V0=V,t=A();for(;;)try{if(187294===<expr>)break;...
+    const rm = new RegExp("!function\\(\\)\\{const [\\w$]+=" + comixEscRe(decName) + ",[\\w$]+=" +
+        comixEscRe(arrFn) + "\\(\\);for\\(;;\\)try\\{if\\((.*?)\\)break;").exec(src);
+    if (!rm) throw new Error("decoder rotation not found");
+    const cond = rm[1];
+    let target, expr;
+    const cm1 = /^(-?\d+)===(.*)$/.exec(cond);
+    const cm2 = /^(.*)===(-?\d+)$/.exec(cond);
+    if (cm1) { target = parseInt(cm1[1], 10); expr = cm1[2]; }
+    else if (cm2) { target = parseInt(cm2[2], 10); expr = cm2[1]; }
+    else throw new Error("decoder checksum not found");
 
     function qWith(arr, n) {
-        const s = arr[n - 236];
+        const s = arr[n - base];
         if (s === undefined) throw new Error("decoder index " + n);
         const out = [];
         let J = 0, P = 0;
@@ -175,18 +254,16 @@ function comixMakeDecoder(src) {
     }
 
     function checksum(arr) {
-        const idx = [1066, 1659, 396, 436, 1722, 1631, 250, 1569, 638, 794, 1678];
-        const v = [];
-        for (let i = 0; i < idx.length; i++) v.push(jsInt(qWith(arr, idx[i])));
-        for (let i = 0; i < v.length; i++) if (isNaN(v[i])) return NaN;
-        return -v[0] / 1 * (v[1] / 2) + v[2] / 3 + -v[3] / 4 * (-v[4] / 5) +
-            -v[5] / 6 * (-v[6] / 7) + v[7] / 8 + -v[8] / 9 +
-            v[9] / 10 * (-v[10] / 11);
+        try {
+            return comixEvalExpr(expr, function (n) { return jsInt(qWith(arr, n)); });
+        } catch (e) {
+            return NaN;
+        }
     }
 
     let rot = -1;
     for (let r = 0; r < JO.length; r++) {
-        if (checksum(JO) === 391725) {
+        if (checksum(JO) === target) {
             rot = r;
             break;
         }
@@ -200,34 +277,85 @@ function comixMakeDecoder(src) {
     };
 }
 
+function comixSafeQ(q, n) {
+    try { return q(n); } catch (e) { return null; }
+}
+
 function comixBuildKey(src, q) {
-    const wj = {};
     let m;
 
-    const arrRe = /wj\[wr\((\d+)\)\]=\[([0-9,]*)\]/g;
-    while ((m = arrRe.exec(src))) {
-        wj[parseInt(m[1], 10)] = m[2].split(",").filter(function (x) { return x !== ""; }).map(Number);
+    // Key pieces: const cH={};cH.id=Vp(608),cH[Vp(1270)]=0,cH[Vp(1163)]=248,cH[Vp(1169)]=1;
+    const entries = {};
+    let entryCount = 0;
+    const entRe = /const ([\w$]+)=\{\};\1\.id=[\w$]+\((\d+)\)((?:,\1\[[\w$]+\(\d+\)\]=\d+)+);/g;
+    while ((m = entRe.exec(src))) {
+        const props = {};
+        const pr = /\[[\w$]+\((\d+)\)\]=(\d+)/g;
+        let pm;
+        while ((pm = pr.exec(m[3]))) props[comixSafeQ(q, parseInt(pm[1], 10))] = parseInt(pm[2], 10);
+        entries[m[1]] = { id: comixSafeQ(q, parseInt(m[2], 10)), props: props };
+        entryCount++;
     }
+    if (!entryCount) throw new Error("key entries not found");
 
-    const strRe = /wj\[wr\((\d+)\)\]=wr\((\d+)\)/g;
-    while ((m = strRe.exec(src))) {
-        wj[parseInt(m[1], 10)] = q(parseInt(m[2], 10));
-    }
+    // Field roles come from the piece decoder call: Dj(C.id, C[<mode>], C[<xor>]).
+    // The remaining numeric field is the offset into the key.
+    const rm = /[\w$]+\(([\w$]+)\.id,\1\[[\w$]+\((\d+)\)\],\1\[[\w$]+\((\d+)\)\]\)/.exec(src);
+    if (!rm) throw new Error("key piece decoder not found");
+    const modeName = comixSafeQ(q, parseInt(rm[2], 10));
+    const xorName = comixSafeQ(q, parseInt(rm[3], 10));
 
     const byName = {};
-    const entRe = /const (e\w+)=\{\};\1\.id=wr\((\d+)\),\1\[wr\(1083\)\]=(\d+),\1\[wr\(1634\)\]=(\d+),\1\[wr\(633\)\]=(\d+);/g;
-    while ((m = entRe.exec(src))) {
-        byName[m[1]] = {
-            id: parseInt(m[2], 10),
-            offset: parseInt(m[3], 10),
-            xor: parseInt(m[4], 10),
-            mode: parseInt(m[5], 10)
+    for (const name in entries) {
+        const ent = entries[name];
+        let offName = null;
+        for (const pn in ent.props) if (pn !== modeName && pn !== xorName) offName = pn;
+        if (offName === null || ent.props[modeName] === undefined || ent.props[xorName] === undefined) continue;
+        byName[name] = {
+            id: ent.id,
+            offset: ent.props[offName],
+            xor: ent.props[xorName],
+            mode: ent.props[modeName]
         };
     }
 
-    const om = /var xj=\[([^\]]+)\];/.exec(src);
-    if (!om) throw new Error("key order not found");
-    const order = om[1].split(",").map(function (s) { return s.trim(); });
+    // Piece data: Bj[Vp(1148)]=[77,176,...] or Bj[Vp(1184)]=Vp(1805).  Group by
+    // object and keep the one that holds every piece id.
+    const stores = {};
+    const stRe = /([\w$]+)\[[\w$]+\((\d+)\)\]=(?:\[([0-9,]*)\]|[\w$]+\((\d+)\))/g;
+    while ((m = stRe.exec(src))) {
+        const k = comixSafeQ(q, parseInt(m[2], 10));
+        if (k === null) continue;
+        let val;
+        if (m[3] !== undefined) {
+            val = m[3].split(",").filter(function (x) { return x !== ""; }).map(Number);
+        } else {
+            val = comixSafeQ(q, parseInt(m[4], 10));
+            if (val === null) continue;
+        }
+        if (!stores[m[1]]) stores[m[1]] = {};
+        stores[m[1]][k] = val;
+    }
+    let wj = null;
+    for (const sn in stores) {
+        let ok = true;
+        for (const en in byName) {
+            if (stores[sn][byName[en].id] === undefined) { ok = false; break; }
+        }
+        if (ok) { wj = stores[sn]; break; }
+    }
+    if (!wj) throw new Error("key data not found");
+
+    // Assembly order: var Cj=[cH,cY,...] listing only piece names.
+    let order = null;
+    const orRe = /(?:var|let|const) [\w$]+=\[([\w$]+(?:,[\w$]+)*)\]/g;
+    while ((m = orRe.exec(src))) {
+        const names = m[1].split(",");
+        let all = names.length > 1;
+        for (let i = 0; i < names.length && all; i++) if (!byName[names[i]]) all = false;
+        if (all) { order = names; break; }
+    }
+    if (!order) throw new Error("key order not found");
 
     const key = new Uint8Array(1088);
     for (let oi = 0; oi < order.length; oi++) {
@@ -247,6 +375,24 @@ function comixBuildKey(src, q) {
         for (let i = 0; i < Y.length; i++) key[e.offset + i] = (Y[i] ^ e.xor) & 255;
     }
     return key;
+}
+
+// Token prefix ("kid"): cu[Vp(779)]=Vp(1809) where Vp(779) decodes to "kid".
+function comixFindPrefix(src, q) {
+    let m;
+    const re = /[\w$]+\[[\w$]+\((\d+)\)\]=[\w$]+\((\d+)\)/g;
+    while ((m = re.exec(src))) {
+        if (comixSafeQ(q, parseInt(m[1], 10)) === "kid") {
+            const v = comixSafeQ(q, parseInt(m[2], 10));
+            if (v && /^[A-Za-z0-9_-]{1,16}$/.test(v)) return v;
+        }
+    }
+    const lm = /["']?kid["']?\s*:\s*[\w$]+\((\d+)\)/.exec(src);
+    if (lm) {
+        const v = comixSafeQ(q, parseInt(lm[1], 10));
+        if (v && /^[A-Za-z0-9_-]{1,16}$/.test(v)) return v;
+    }
+    throw new Error("token prefix not found");
 }
 
 const COMIX_SHA_K = [
@@ -575,10 +721,11 @@ class DefaultExtension extends MProvider {
 
             const dec = comixMakeDecoder(apiSrc);
             const key = comixBuildKey(apiSrc, dec.q);
+            const prefix = comixFindPrefix(apiSrc, dec.q);
 
             COMIX_SESSION = {
                 key: key,
-                prefix: dec.q(554),
+                prefix: prefix,
                 apiUrl: apiUrl,
                 mainUrl: mainUrl,
                 source: "live"
@@ -586,7 +733,7 @@ class DefaultExtension extends MProvider {
         } catch (e) {
             COMIX_SESSION = {
                 key: comixHexToBytes(COMIX_FALLBACK_KEY_HEX),
-                prefix: "57y",
+                prefix: "si7",
                 apiUrl: "",
                 mainUrl: "",
                 source: "fallback",
@@ -631,8 +778,10 @@ class DefaultExtension extends MProvider {
             return "Comix wants a one-time human check. Tap the globe (webview) " +
                 "button on the title, complete the check, then pull to refresh.";
         }
-        if (json.code === "invalid_token" || json.error === "invalid_token") {
-            return "Comix rejected the request token. Reopen the source to refresh it.";
+        if (this.isTokenError(json)) {
+            let msg = "Comix rejected the request token (" + (json.code || json.error || "invalid") + ").";
+            if (COMIX_SESSION && COMIX_SESSION.error) msg += " Key refresh failed: " + COMIX_SESSION.error;
+            return msg;
         }
         if (json.error && typeof json.error === "object") {
             return "Comix API: " + (json.error.message || JSON.stringify(json.error));
@@ -643,14 +792,28 @@ class DefaultExtension extends MProvider {
         return "";
     }
 
+    // The API signals a stale signing key as invalid_token, key_retired,
+    // key_expired and the like, always with a 401/403 and "token" in the text.
+    isTokenError(json) {
+        if (!json || typeof json !== "object") return false;
+        const parts = [json.code, json.error, json.message];
+        if (json.error && typeof json.error === "object") parts.push(json.error.code, json.error.message);
+        for (let i = 0; i < parts.length; i++) {
+            const s = typeof parts[i] === "string" ? parts[i].toLowerCase() : "";
+            if (!s) continue;
+            if (/token|key_|_key|kid|signature/.test(s)) return true;
+        }
+        return false;
+    }
+
     async apiGet(path, params) {
         let session = await this.ensureSession();
         let res = await this.client.get(this.buildApiUrl(path, params, session), this.apiHeaders());
         let json = this.parseApiResponse(res, session);
 
-        // A bundle rotation makes every request fail with invalid_token.  Drop
+        // A bundle rotation makes every request fail with a token error.  Drop
         // the cached key, rediscover it, and try the request exactly once more.
-        if (json && (json.code === "invalid_token" || json.error === "invalid_token")) {
+        if (json && this.isTokenError(json)) {
             COMIX_SESSION = null;
             session = await this.ensureSession();
             res = await this.client.get(this.buildApiUrl(path, params, session), this.apiHeaders());

@@ -9,7 +9,7 @@ const mangayomiSources = [
     "typeSource": "single",
     "itemType": 0,
     "isNsfw": false,
-    "version": "0.2.5",
+    "version": "0.2.6",
     "pkgPath": "manga/src/en/comix.js"
   }
 ];
@@ -1100,18 +1100,68 @@ class DefaultExtension extends MProvider {
         };
     }
 
+    // The unfiltered chapter list ("All groups" on the site) keeps one upload
+    // per chapter number, so other groups' uploads of the same chapter never
+    // show up (e.g. official releases hidden behind a scanlation).  The site
+    // lists those by asking for each group with group_id, so do the same and
+    // merge.  The unfiltered list is still read for chapters with no group.
     async getChapters(hid, title) {
+        const raw = await this.fetchChapterItems(hid, title, null);
+
+        let groups = [];
+        try {
+            const gj = await this.apiGet("/manga/" + encodeURIComponent(hid) + "/groups", {});
+            const r = gj.result;
+            groups = Array.isArray(r) ? r : ((r && r.items) || []);
+        } catch (e) {
+            if (this.isCaptchaError(e)) throw e;
+            groups = [];
+        }
+        for (let gi = 0; gi < groups.length; gi++) {
+            const gid = groups[gi] && groups[gi].id;
+            if (gid === undefined || gid === null) continue;
+            const items = await this.fetchChapterItems(hid, title, gid);
+            for (let i = 0; i < items.length; i++) raw.push(items[i]);
+        }
+
+        const seen = {};
+        const merged = [];
+        for (let i = 0; i < raw.length; i++) {
+            const it = raw[i];
+            const key = it.id !== undefined && it.id !== null ? "id:" + it.id : "url:" + (it.url || i);
+            if (seen[key]) continue;
+            seen[key] = true;
+            merged.push(it);
+        }
+        // Newest first, as the app expects; same-number uploads stay together.
+        merged.sort(function (a, b) {
+            const na = parseFloat(a.number), nb = parseFloat(b.number);
+            const va = isNaN(na) ? -1 : na, vb = isNaN(nb) ? -1 : nb;
+            if (vb !== va) return vb - va;
+            const ga = a.group && a.group.name ? String(a.group.name) : "";
+            const gb = b.group && b.group.name ? String(b.group.name) : "";
+            return ga < gb ? -1 : (ga > gb ? 1 : 0);
+        });
+
         const chapters = [];
+        for (let i = 0; i < merged.length; i++) chapters.push(this.chapterFrom(merged[i]));
+        return chapters;
+    }
+
+    async fetchChapterItems(hid, title, groupId) {
+        const out = [];
         let page = 1;
         let guard = 0;
         while (guard++ < 60) {
             let cj;
             try {
-                cj = await this.apiGet("/manga/" + encodeURIComponent(hid) + "/chapters", {
+                const params = {
                     limit: 100,
                     page: page,
                     "order[number]": "desc"
-                });
+                };
+                if (groupId !== null && groupId !== undefined) params.group_id = groupId;
+                cj = await this.apiGet("/manga/" + encodeURIComponent(hid) + "/chapters", params);
             } catch (e) {
                 if (this.isCaptchaError(e)) {
                     throw new Error("Comix: could not load the chapter list for \"" +
@@ -1124,11 +1174,11 @@ class DefaultExtension extends MProvider {
             }
             const r = cj.result || {};
             const items = r.items || [];
-            for (let i = 0; i < items.length; i++) chapters.push(this.chapterFrom(items[i]));
+            for (let i = 0; i < items.length; i++) out.push(items[i]);
             if (!items.length || !r.meta || !r.meta.hasNext) break;
             page++;
         }
-        return chapters;
+        return out;
     }
 
     async getPageList(url) {

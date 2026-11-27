@@ -9,7 +9,7 @@ const mangayomiSources = [
     "typeSource": "single",
     "itemType": 0,
     "isNsfw": false,
-    "version": "0.2.6",
+    "version": "0.2.7",
     "pkgPath": "manga/src/en/comix.js"
   }
 ];
@@ -1039,9 +1039,13 @@ class DefaultExtension extends MProvider {
     }
 
     chapterFrom(ch) {
+        // "Vol.5 Ch.20", as the site writes it.  Mangayomi derives each
+        // chapter's identity from its name and only strips a volume written
+        // "Vol.5" (no space); "Vol. 5 Chapter 20" read as chapter 5, so every
+        // chapter of a volume from one group collapsed into a single entry.
         const num = ch.number;
-        let name = "Chapter " + num;
-        if (ch.volume && Number(ch.volume) > 0) name = "Vol. " + ch.volume + " " + name;
+        let name = "Ch." + num;
+        if (ch.volume && Number(ch.volume) > 0) name = "Vol." + ch.volume + " " + name;
         if (ch.name) name += " - " + ch.name;
         return {
             name: name,

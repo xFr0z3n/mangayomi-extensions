@@ -9,7 +9,7 @@ const mangayomiSources = [
     "typeSource": "single",
     "itemType": 0,
     "isNsfw": false,
-    "version": "0.2.4",
+    "version": "0.2.5",
     "pkgPath": "manga/src/en/comix.js"
   }
 ];
@@ -1028,6 +1028,16 @@ class DefaultExtension extends MProvider {
         return s.replace(/^\/+/, "").replace(/\/+$/, "");
     }
 
+    // Mirrors the site's chapter row: the group name when there is a group,
+    // otherwise "Official" for chapters flagged isOfficial.  Leaving the
+    // latter blank hid them from Mangayomi's scanlator filter.
+    scanlatorFrom(ch) {
+        const g = ch.group;
+        if (g && g.name) return String(g.name);
+        if (ch.isOfficial || ch.is_official || (g && (g.isOfficial || g.is_official))) return "Official";
+        return "";
+    }
+
     chapterFrom(ch) {
         const num = ch.number;
         let name = "Chapter " + num;
@@ -1037,7 +1047,7 @@ class DefaultExtension extends MProvider {
             name: name,
             url: ch.url || String(ch.id),
             dateUpload: comixParseRelativeDate(ch.createdAtFormatted),
-            scanlator: ch.group ? (ch.group.name || "") : "",
+            scanlator: this.scanlatorFrom(ch),
             isFiller: false
         };
     }
